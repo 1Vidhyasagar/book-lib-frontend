@@ -5,14 +5,15 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
-// Import the GIF URL
 const gifUrl =
-  "https://i.pinimg.com/originals/ba/08/bb/ba08bb88b175aa7d5065f61db78affca.gif"; 
+  "https://i.pinimg.com/originals/ba/08/bb/ba08bb88b175aa7d5065f61db78affca.gif";
 
 const EditBook = () => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [publishYear, setPublishYear] = useState("");
+  const [bookData, setBookData] = useState({
+    title: "",
+    author: "",
+    publishYear: "",
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -23,9 +24,8 @@ const EditBook = () => {
     axios
       .get(`https://booklibb.onrender.com/books/${id}`)
       .then((response) => {
-        setAuthor(response.data.author);
-        setPublishYear(response.data.publishYear);
-        setTitle(response.data.title);
+        const { title, author, publishYear } = response.data;
+        setBookData({ title, author, publishYear });
         setLoading(false);
       })
       .catch((error) => {
@@ -33,17 +33,12 @@ const EditBook = () => {
         enqueueSnackbar("Error", { variant: "error" });
         console.log(error);
       });
-  }, []);
+  }, [id]);
 
   const handleEditBook = () => {
-    const data = {
-      title,
-      author,
-      publishYear,
-    };
     setLoading(true);
     axios
-      .put(`https://booklibb.onrender.com/books/${id}`, data)
+      .put(`https://booklibb.onrender.com/books/${id}`, bookData)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Book Edited successfully", { variant: "success" });
@@ -56,49 +51,68 @@ const EditBook = () => {
       });
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setBookData({
+      ...bookData,
+      [name]: value,
+    });
+  };
+
   return (
-    <div className="p-4 flex">
-      <div className="w-3/4">
-        <BackButton />
-        <h1 className="text-3xl my-4">Edit Book</h1>
+    <div className="p-4 flex flex-col md:flex-row">
+      <div className="md:w-1/2 md:pr-4">
+        <div className="flex justify-between">
+          <BackButton />
+          <h1 className="text-3xl">Edit Book</h1>
+        </div>
+
         {loading ? <Spinner /> : ""}
-        <div className="flex flex-col border-2 border-sky-400 rounded-xl w-[600px] p-4 mx-auto">
+        <div className="mt-3">
           <div className="my-4">
             <label className="text-xl mr-4 text-gray-500">Title</label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="border-2 border-gray-500 px-4 py-2 w-full"
+              name="title"
+              value={bookData.title || ""}
+              onChange={handleInputChange}
+              className="border-2 border-gray-500 px-4 w-full"
             />
           </div>
           <div className="my-4">
             <label className="text-xl mr-4 text-gray-500">Author</label>
             <input
               type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              className="border-2 border-gray-500 px-4 py-2  w-full "
+              name="author"
+              value={bookData.author || ""}
+              onChange={handleInputChange}
+              className="border-2 border-gray-500 px-4 w-full"
             />
           </div>
           <div className="my-4">
             <label className="text-xl mr-4 text-gray-500">Publish Year</label>
             <input
               type="number"
-              value={publishYear}
-              onChange={(e) => setPublishYear(e.target.value)}
-              className="border-2 border-gray-500 px-4 py-2  w-full "
+              name="publishYear"
+              value={bookData.publishYear || ""}
+              onChange={handleInputChange}
+              className="border-2 border-gray-500 px-4 w-full"
             />
           </div>
-          <button className="p-2 bg-sky-800 m-8 text-white" onClick={handleEditBook}>
+          <button
+            className="p-2 mt-4 rounded-md bg-sky-800 w-full text-white"
+            onClick={handleEditBook}
+          >
             Save
           </button>
         </div>
       </div>
-
-      {/* Add the GIF to the right side */}
-      <div className="w-2/4 flex justify-center items-center">
-        <img src={gifUrl} alt="Right-side GIF" className="max-h-full ml-16 rounded-3xl" />
+      <div className="md:w-5/12 flex justify-center items-center mt-4 md:mt-16">
+        <img
+          src={gifUrl}
+          alt="Right-side GIF"
+          className="max-h-full rounded-2xl"
+        />
       </div>
     </div>
   );

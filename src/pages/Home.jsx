@@ -32,29 +32,27 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="relative p-5">
-      <div className="flex justify-between items-center">
-        {/* Add Tailwind CSS classes for creative font */}
-        <h1 className="text-3xl mt-8 font-extrabold text-sky-800">
+    <div className="relative md:p-4">
+      <div className="flex flex-col md:flex-row justify-between items-center">
+        <h1 className="text-3xl mt-8 md:-mt-5 font-extrabold text-sky-800">
           Book<span className="text-red-600">Lib</span>
         </h1>
-      </div>
-      <div className="flex justify-between items-center">
-        <p className="mb-8">Your Gateway to Endless Stories! Explore now...</p>
-
+        <p className="md:mt-5">
+          Your Gateway to Endless Stories! Explore now...
+        </p>
         <Link to="/books/create">
           <MdOutlineAddBox className="text-sky-800 text-4xl " />
         </Link>
       </div>
-      <div className="flex justify-center items-center gap-x-4">
+      <div className="flex justify-center items-center gap-x-4 md:mt-2">
         <button
-          className="bg-sky-600 hover:bg-sky-800 text-white px-4 py-1 rounded-lg"
+          className="bg-sky-600 hover:bg-sky-800 text-white px-3 py-1 md:px-4 md:py-1 rounded-lg"
           onClick={() => setShowType("table")}
         >
           Table
         </button>
         <button
-          className="bg-sky-600 hover:bg-sky-800 text-white px-4 py-1 rounded-lg"
+          className="bg-sky-600 hover:bg-sky-800 text-white px-3 py-1 md:px-4 md:py-1 rounded-lg"
           onClick={() => setShowType("card")}
         >
           Card
@@ -72,7 +70,7 @@ const Home = () => {
       <img
         src={gifBackground}
         alt="Background GIF"
-        className="bottom-0 mx-auto rounded-2xl w-4/12"
+        className="bottom-0 mx-auto rounded-2xl w-4/12 h-32 md:h-48"
       />
     </div>
   );

@@ -10,7 +10,6 @@ const App = () => {
     <div
       className="bg-blue-100 min-h-screen"
     >
-      {/* Add a container div with padding */}
       <div className="container mx-auto p-4">
         <Routes>
           <Route path="/" element={<Home />} />
